@@ -98,7 +98,6 @@ public class Viewer extends Application {
 
             VBox vDownBox = new VBox();
             HBox hboxUp = new HBox();
-
             HBox hBoxDown = new HBox();
             VBox vbox = new VBox();
             if(imageChoose == null)
@@ -328,24 +327,23 @@ public class Viewer extends Application {
         ImageView imageViewChoosen = new ImageView();
 
         addPieceOrPegHbox(hboxUp);
-
+        //获得一个下拉框 选择不同的难度
         Label label = new Label();
-        label.setText(" Option");
-        label.setFont(Font.font("Timer New Roman", FontWeight.BOLD, 20));
-        //下拉框 选择难度
-        ChoiceBox<Object> cb = new ChoiceBox<>();
-        cb.setItems(FXCollections.observableArrayList("EASY", "MEDIUM", "DIFFIUCLT"));
-        String[] greeting = {"EASY", "MEDIUM", "DIFFIUCLT"};
-        cb.getSelectionModel().select(0);
-        cb.setTooltip(new Tooltip("Select the difficulty:"));
-        cb.getSelectionModel().selectedIndexProperty().addListener((ov,oldv,newv)->{
+        label.setText(" Options of the difficulties");//label文字
+        label.setFont(Font.font("Timer New Roman", FontWeight.BLACK, 10));//label字体
+        ChoiceBox<Object> DifficultyChoiceBox = new ChoiceBox<>();//选择box
+        DifficultyChoiceBox.setItems(FXCollections.observableArrayList("Easy", "Medium", "Hard"));
+        String[] greeting = {"Easy", "Medium", "Hard"};//字符串数组
+        DifficultyChoiceBox.getSelectionModel().select(0);
+        //由于 SingleSelectionModel 只能支持一次选择一个索引，这也会导致任何先前选择的索引都被取消选择。
+        DifficultyChoiceBox.setTooltip(new Tooltip("Select the difficulty:"));//提示文字
+        DifficultyChoiceBox.getSelectionModel().selectedIndexProperty().addListener((ov,oldv,newv)->{
             difficultyStr = newv.intValue();
             System.out.println("********** difficultyStr:  " + greeting[newv.intValue()]);
         });
 
         imgViewNow = new ImageView(imageChoose);
-        vbox.getChildren().addAll(cb,label,imgViewNow);
-
+        vbox.getChildren().addAll(DifficultyChoiceBox,label,imgViewNow);
         /***********************************************************************************************/
 
         //draw init Placement
