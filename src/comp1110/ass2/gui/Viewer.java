@@ -36,9 +36,10 @@ import java.util.*;
  * NOTE: This class is separate from your main game class.  This
  * class does not play a game, it just illustrates various piece
  * placements.
+ * 该课程与您的主要游戏课程分开。 这个class 不玩游戏，它只是说明各种片段
+ *   展示位置。
  */
 public class Viewer extends Application {
-
 
     /* board layout */
     private static final int SQUARE_SIZE = 60;
@@ -52,14 +53,15 @@ public class Viewer extends Application {
     private final Group board = new Group();
     TextField textField;
     private Coordinate[] coordinateList = new Coordinate[32];
+    //坐标列表
 
     private BorderPane rootPane = new BorderPane();
-    private Image imageChoose = null;
-    private int Cnum;
-    private int Rnum;
-    private int CnumT;
-    private int RnumT;
-    public static HashMap<String,Piece> mapOffset = new HashMap<>();
+    private Image imageChoose = null;// 选择的哪张图片，序号从b0-b3,others全靠的是镜像翻折
+    private int Cnum;//钉子或者piece 的定位点，以此点作为展开x坐标
+    private int Rnum;//钉子或者piece 的定位点，以此点作为展开y坐标
+    private int CnumT;//钉子或者piece ，展开x坐标，一共占据了几个x空位
+    private int RnumT;//钉子或者piece ，展开y坐标，一共占据了几个y空位
+    public static HashMap<String,Piece> mapOffset = new HashMap<>();//hash 图
     public static String placementStringNow = "";
     public static String placementStringNowTest = "";
     public static String positionStringNowy = "";
@@ -72,15 +74,19 @@ public class Viewer extends Application {
     private static int  whichPieceNum = 0;
     private static String[] winStrings = new String[]{"a7A7","b6A7","c1A3","d2A6",
             "e2C3","f3C4","g4A7","h6D0","i6B0","j2B0","j1C0","k3C0","l4B0","l5C0"};
+    //the first character identifies which of the eight shapes is being placed (a to h).
+    //第一个字符标识要放置八个形状中的哪一个（a 到 h）
+
 
     public String[] pegStrings = new String[]
             {"1A", "2A", "3A", "4A", "5A", "6A", "7A", "8A",
              "1B", "2B", "3B", "4B", "5B", "6B", "7B", "8B",
              "1C", "2C", "3C", "4C", "5C", "6C", "7C", "8C",
              "1D", "2D", "3D", "4D", "5D", "6D", "7D", "8D"};
+    //peg钉子（可以扩展为棋盘子总坐标分布）的位置，123456代表x坐标，ABCD代表Y坐标
 
     /**
-     * Draw a placement in the window, removing any previously drawn one
+     * Draw a placement in the window, removing any previously drawn one在窗口中绘制一个位置，删除任何先前绘制的位置
      * @param placement  A valid placement string
      */
     void makePlacement(String placement) throws IOException {
@@ -98,55 +104,65 @@ public class Viewer extends Application {
 
             VBox vDownBox = new VBox();
             HBox hboxUp = new HBox();
-            HBox hBoxDown = new HBox();
-            VBox vbox = new VBox();
+           HBox hBoxDown = new HBox();
+           VBox vbox = new VBox();
+
             if(imageChoose == null)
                 imageChoose = new Image("comp1110/ass2/gui/assets/k.png");
             if(whichPiece == null)
                 whichPiece = "k";
+            //返回了绿色的k钉子
+
 
             addPieceOrPegHbox(hboxUp);
 
             Label label = new Label();
-            label.setText(" Option");
-            label.setFont(Font.font("Timer New Roman", FontWeight.BOLD, 20));
+            label.setText(" Option");//选项文字出现
+            label.setFont(Font.font("Timer New Roman", FontWeight.BOLD, 20));//文字的字体
 
-            ChoiceBox<Object> cb = new ChoiceBox<>();
-            cb.setItems(FXCollections.observableArrayList("EASY", "MEDIUM", "DIFFIUCLT"));
-            String[] greeting = {"EASY", "MEDIUM", "DIFFIUCLT"};
-            cb.getSelectionModel().select(difficultyStr);
-            cb.setTooltip(new Tooltip("Select the difficulty:"));
+            ChoiceBox<Object> cb = new ChoiceBox<>();//单项选择
+            cb.setItems(FXCollections.observableArrayList("EASY", "MEDIUM", "DIFFIUCLT"));//三个选项
+            String[] greeting = {"EASY", "MEDIUM", "DIFFIUCLT"};//数组储存三个选项
+            cb.getSelectionModel().select(difficultyStr);//难度数组
+            //private static int difficultyStr = 0
+            cb.setTooltip(new Tooltip("Select the difficulty:"));//提示选择难度文字
             cb.getSelectionModel().selectedIndexProperty().addListener((ov,oldv,newv)->{
                 difficultyStr = newv.intValue();
-                System.out.println("********** difficultyStr:  " + greeting[newv.intValue()]);
+                //返回一个此对象在转换为 int 类型后表示的数值。
+                //Returns 一个随机数字the value of the specified number as an int
+                // 以 int 形式返回指定数字的值，Integer.valueOf() 返回一个整数对象，它相当于一个新的 Integer(Integer.parseInt(s))。
+                System.out.println("********** difficultyStr:  " + greeting[newv.intValue()]);//随机指定一个难度
             });
+            //private Image imageChoose = null
+            //public static ImageView imgViewNow = null
 
-            imgViewNow = new ImageView(imageChoose);
-            imgViewNow.setFitHeight(imageChoose.getHeight()/4 );
-            imgViewNow.setFitWidth(imageChoose.getWidth()/4);
-            picAddMonitor(imgViewNow,"*" + whichPiece);
+//下面这一段不知道干吗用的，但是就算我去掉了仍然运行没有问题
+          //  imgViewNow = new ImageView(imageChoose);
+            //                    imgViewNow.setFitHeight(imageChoose.getHeight()/4 );//4个为一个
+            //                       imgViewNow.setFitWidth(imageChoose.getWidth()/4);
+            //                    picAddMonitor(imgViewNow,"*" + whichPiece);
 
-            vbox.getChildren().addAll(cb,label,imgViewNow);
+                    vbox.getChildren().addAll(cb,label,imgViewNow);
 
-            //draw init Placement
-            //make Placement
+            //draw init Placement绘制初始化放置
+            //make Placement进行安置
             GridPane pane = addGridPane(listLocationInfo);
+            //ArrayList<String> listLocationInfo = new ArrayList<String>()
 
             hBoxDown.getChildren().addAll(pane,vbox);
             vDownBox.getChildren().addAll(hboxUp,hBoxDown);
             makeControls();
 
 
-
             Stage anotherStage = stageNow;
-            anotherStage.setScene(new Scene(rootPane2, 933, 700));
-            anotherStage.setTitle("TWISTGAME VIEWER");
+            anotherStage.setScene(new Scene(rootPane2, 933, 700));//代表的是总stage长度宽度
+            anotherStage.setTitle("TWISTGAME VIEWER");//标题
             rootPane2.setCenter(vDownBox);
 
             if(placement.length() == 56)
                 setAlertContent("WIN !");
 
-            anotherStage.show();
+            anotherStage.show();//展示画板
 
 
         }
@@ -155,12 +171,13 @@ public class Viewer extends Application {
 
     /**
      * Randomly generate a valid start string
+     * and Randomly place two pieces
      */
     public String startPlacements() {
-        //Randomly place two pieces
+        //Randomly place two pieces随机放两个piece和选择难度对应的钉子
         //From Anzee u6744888
-        char[] pieceOrPeg = {'a','b','c','d','e','f','g','h'};
-        char[] rowRandom = {'A','B','C','D'};
+        char[] pieceOrPeg = {'a','b','c','d','e','f','g','h'};//piece和peg共享的颜色
+        char[] rowRandom = {'A','B','C','D'};//共享的行为4个字幕 coloum代笔列是8个数字
 
         String initPlacements = "";
 
@@ -169,17 +186,29 @@ public class Viewer extends Application {
             case 0:
                 initPlacements = "j2B0j1C0k3C0l4B0l5C0";
                 rightLength = 20;
+                //j2B0
+                // j1C0
+                // k3C0
+                // l4B0
+                // l5C0 给了5个钉子难度0党
                 break;
             case 1:
                 initPlacements = "j2B0k3C0l5C0";
-                rightLength = 12;
+                rightLength = 12;//
+                // j2B0
+                // k3C0
+                // l5C0
+                // 总长度12 给了3个钉子，难度1挡
                 break;
             case 2:
                 initPlacements = "";
+                //暂时不做
         }
 
         String justLog = initPlacements;
-        while(initPlacements.length()<=rightLength || (initPlacements=="") || (!TwistGame.isPlacementStringWellFormed(initPlacements)) ||(!TwistGame.isPlacementStringValid(initPlacements)))
+        while(initPlacements.length()<=rightLength || (initPlacements=="")
+                || (!TwistGame.isPlacementStringWellFormed(initPlacements))
+                ||(!TwistGame.isPlacementStringValid(initPlacements)))
         {
             initPlacements = justLog;
             Random random=new Random();
@@ -190,8 +219,9 @@ public class Viewer extends Application {
                 {
                     whichPiece = "";
                     int c1 = random.nextInt(13);
+                    //随机生成了12个数字 也就是3个
                     whichPiece = winStrings[c1];
-                    //System.out.println(whichPiece);
+                    System.out.println(whichPiece);
                 }
                 initPlacements = BubbleSort(getLocationFromPlacementStr(initPlacements + whichPiece));
             }
@@ -203,72 +233,82 @@ public class Viewer extends Application {
         if((initPlacements==null) && (initPlacements == "")){
             return null;
         }else {
-            return initPlacements;
+            return initPlacements;//生成了两个piece和难度对应的钉子
         }
 
     }
 
     /**
-     * Randomly generate a valid start string
+     * Randomly generate a valid start string开始符合要求的placament string
      */
     public String startOldPlacements() {
         //Randomly place two pieces
         //From Anzee u6744888
-        char[] pieceOrPeg = {'a','b','c','d','e','f','g','h'};
-        char[] rowRandom = {'A','B','C','D'};
+        char[] pieceOrPeg = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};//用于随机生成字幕
+        char[] rowRandom = {'A', 'B', 'C', 'D'};
 
         String initPlacements = "";
 
-        switch (difficultyStr){
+        switch (difficultyStr) {
             case 0:
                 initPlacements = "j2B0j1C0k3C0l4B0l5C0";
+                //j2B0
+                // j1C0
+                // k3C0
+                // l4B0
+                // l5C0 给了5个钉子难度0挡
                 break;
             case 1:
                 initPlacements = "j2B0k3C0l5C0";
+                // j2B0// k3C0// l5C0
+                // 总长度12 给了3个钉子，难度1挡
+
                 break;
             case 2:
                 initPlacements = "";
+                //难度2挡暂时不做
         }
 
-        String justLog = initPlacements;
-        while((initPlacements=="") || (!TwistGame.isPlacementStringWellFormed(initPlacements)) ||(!TwistGame.isPlacementStringValid(initPlacements)))
-        {
-            initPlacements = justLog;
-            Random random=new Random();
-            for(int i=0; i<1 ;i++){
+        String justLog = initPlacements;//justlog就是初始字符串
+        while ((initPlacements == "") || (!TwistGame.isPlacementStringWellFormed(initPlacements)) || (!TwistGame.isPlacementStringValid(initPlacements))) {
+            initPlacements = justLog;//justlog就是初始字符串
+            Random random = new Random();//创建一个新的随机数生成器
+            for (int i = 0; i < 1; i++) {
 
                 String whichPiece = "";
-                while((!TwistGame.isPlacementWellFormed(whichPiece)) && (!TwistGame.isPlacementStringValid(whichPiece)))
-                {
+                while ((!TwistGame.isPlacementWellFormed(whichPiece)) && (!TwistGame.isPlacementStringValid(whichPiece))) {
                     whichPiece = "";
-                    int c1 = random.nextInt(8);
-                    int c2 = random.nextInt(8)+1;
-                    int c3 = random.nextInt(4);
-                    int c4 = random.nextInt(8);
+                    int c1 = random.nextInt(8);//第一个x坐标以及后面【0-7）随机生成一个
+                    int c2 = random.nextInt(8) + 1;////第二个x坐标以及后面【0-8）随机生成一个
+                    int c3 = random.nextInt(4);//第三个x坐标以及后面【0-3）随机生成一个
+                    int c4 = random.nextInt(8);//第四个x坐标以及后面【0-7）随机生成一个
                     whichPiece = whichPiece + pieceOrPeg[c1] + c2 + rowRandom[c3] + c4;
-                    //System.out.println(whichPiece);
+                    //空字符串/原来就有的钉子+第一个颜色字母+列坐标+行字母坐标+旋转数字
+                    // char[] pieceOrPeg = {'a','b','c','d','e','f','g','h'};//piece和peg共享的用于随机生成颜色字母
+                    //  char[] rowRandom = {'A','B','C','D'};//piece和peg共享的行4个字母 coloum代笔列是8个数字
+                    System.out.println(whichPiece);
                 }
-                initPlacements = BubbleSort(getLocationFromPlacementStr(initPlacements + whichPiece));
+                initPlacements = BubbleSort(getLocationFromPlacementStr(initPlacements + whichPiece));//冒泡排序找到
             }
         }
 
         System.out.println("***************************************************************");
         System.out.println("********** 随机生成的状态字符串  : " + initPlacements);
 
-        if((initPlacements==null) && (initPlacements == "")){
+        if ((initPlacements == null) && (initPlacements == "")) {
             return null;
-        }else {
+        } else {
             return initPlacements;
         }
 
     }
 
-//    Display images of pieces in the window (anywhere)
-//    Translate peg positions to x and y positions in the window.
-//    Display images of pieces so that their origin is in the correct place.
+//    Display images of pieces in the window (anywhere) Translate peg positions to x and y positions in the window. Display images of pieces so that their origin is in the correct place.
+//    在窗口中显示工件的图像（任意位置）将钉子的位置转换为窗口中的x列和y行位置。显示工件的图像，使其原点位于正确的位置。
 //    Display images so that their origin is in the correct place and their orientation is correct.
+//显示图像，使其原点位于正确位置且方向正确。
 //    Break placement strings into piece placements.   Anzee
-
+    //将总的放置字符串分解为piece放置字符串// FIXME Task 8 and copy it
     /**
      * Create a basic text field for input and a refresh button.
      */
@@ -298,7 +338,7 @@ public class Viewer extends Application {
         controls.getChildren().add(hb);
     }
 
-    //Basic linear search function
+    //Basic linear search function基本线性搜索功能
     public Coordinate getPegCoordinates(String pegID) {
         for (int i = 0; i < coordinateList.length - 1; i++) {
             if (coordinateList[i].pegID == pegID) {
@@ -306,6 +346,7 @@ public class Viewer extends Application {
             }
         }
         //If the last element in the list is reached and the peg hasn't been found, it must be the last element.
+        //如果到达列表中的最后一个元素并且未找到钉子，则它必须是最后一个元素
         return coordinateList[coordinateList.length - 1];
     }
 
@@ -316,7 +357,7 @@ public class Viewer extends Application {
         stageNow = primaryStage;
 
         rootPane = (BorderPane)FXMLLoader.load(getClass().getResource("IqTwist.fxml"));
-        primaryStage.setTitle("TWISTGAME VIEWER");
+        primaryStage.setTitle("TWIST GAME VIEWER");//左上角的小标题
 
         VBox vDownBox = new VBox();
         HBox hboxUp = new HBox();
@@ -324,7 +365,11 @@ public class Viewer extends Application {
         VBox vbox = new VBox();
         //选中的piece or peg
         imageChoose = new Image("comp1110/ass2/gui/assets/k.png");
-        ImageView imageViewChoosen = new ImageView();
+        //private Image imageChoose = null //BorderPane 在顶部、左侧、右侧、底部和中心位置布置子项。
+        //顶部和底部的孩子将被调整到他们喜欢的高度并扩展边框窗格的宽度。 左右子节点将被调整为它们的首选宽度，
+        // 并在顶部和底部节点之间扩展长度。
+        // 并且中心节点将被调整大小以填充中间的可用空间。 任何位置都可以为空。
+       // ImageView imageViewChoosen = new ImageView();
 
         addPieceOrPegHbox(hboxUp);
         //获得一个下拉框 选择不同的难度
@@ -339,6 +384,7 @@ public class Viewer extends Application {
         DifficultyChoiceBox.setTooltip(new Tooltip("Select the difficulty:"));//提示文字
         DifficultyChoiceBox.getSelectionModel().selectedIndexProperty().addListener((ov,oldv,newv)->{
             difficultyStr = newv.intValue();
+            //private static int difficultyStr = 0
             System.out.println("********** difficultyStr:  " + greeting[newv.intValue()]);
         });
 
@@ -346,11 +392,13 @@ public class Viewer extends Application {
         vbox.getChildren().addAll(DifficultyChoiceBox,label,imgViewNow);
         /***********************************************************************************************/
 
-        //draw init Placement
+        //绘制初始化放置程序
         GridPane rootDown = addGridPane();
+        //GridPane 在行和列的灵活网格中布置其子项。 如果设置了边框和/或内边距，则其内容将布置在这些插图中。
+        //子项可以放置在网格内的任何位置，并且可以跨越多个行/列。
         hBoxDown.getChildren().addAll(rootDown,vbox);
         vDownBox.getChildren().addAll(hboxUp,hBoxDown);
-        makeControls();
+        makeControls();///创建用于输入的基本文本字段和刷新按钮。
         setOffset();
         rootPane.setCenter(vDownBox);
         primaryStage.setScene(new Scene(rootPane, 933, 700));
@@ -387,7 +435,8 @@ public class Viewer extends Application {
     }
 
     /**
-     * Create board according to list ,which contain the location infomation of every piece or peg
+     * Create board according to list ,which contain the location information of every piece or peg
+     * 根据列表创建棋盘，其中包含每个棋子或钉子的位置信息
      */
     private GridPane addGridPane(ArrayList<String> list){
 
@@ -557,10 +606,11 @@ public class Viewer extends Application {
 
     /*
      * Monitor picture drag and drop
+     * 这里需要完成拖拉效果，做的不好
      * */
     private void picAddMonitor(ImageView imageV,String whichPieceOrPeg){
 
-            imageV.setOnMousePressed(event -> {      // mouse press indicates begin of drag
+            imageV.setOnMousePressed(event -> {      // mouse press indicates begin of drag按下开始拖拉
 
                 if(whichPieceOrPeg.length() == 2 && !(String.valueOf(whichPieceOrPeg.charAt(1)).equals(whichPiece))){
                     whichPieceNum = 0;
@@ -595,10 +645,7 @@ public class Viewer extends Application {
                 // System.out.println("event.getSceneX() " + event.getSceneX());
                 // System.out.println("event.getSceneY() " + event.getSceneY());
             });
-
-
-
-        /*
+            //做的很不好，没有动画运动的效果，而且也没有拖动成功的感觉，需要改进
         imageV.setOnMouseDragged(event -> {      // mouse is being dragged
 
             System.out.println("setOnMousePressed" );
@@ -608,7 +655,7 @@ public class Viewer extends Application {
             System.out.println("event.getSceneY() " + event.getSceneY());
             event.consume();
         });
-        */
+
 
         imageV.setOnMouseReleased(event -> {     // drag is complete
             {
@@ -616,8 +663,11 @@ public class Viewer extends Application {
                 System.out.println("event.getSceneX() ===== " + event.getSceneX());
                 System.out.println("event.getSceneY() ===== " + event.getSceneY());
 
-                List<Integer> listForPosi = new ArrayList<>();
+                List<Integer> listForPosi = new ArrayList<>();//整数数组
                 CalculatePositonForPlacementString(listForPosi,event.getSceneX(),event.getSceneY());
+                //private void CalculatePositonForPlacementString(List<Integer> position,
+                //                                                Double X,
+                //                                                Double Y)
 
                 if (listForPosi!=null && listForPosi.size()==2 ){
                     String strPosition = null;
@@ -658,11 +708,10 @@ public class Viewer extends Application {
                 }
             }
         });
-
     }
 
     /*
-     * Calculate the coordinates in the GridPane based on the coordinates
+     * Calculate the coordinates in the GridPane based on the coordinates根据坐标计算GridPane中的坐标
      * */
     private void CalculatePositonForPlacementString(List<Integer> position,Double X, Double Y) {
 
@@ -706,20 +755,22 @@ public class Viewer extends Application {
 
     /*
      * Sort the status string using bubble sort a-l
+     * 使用冒泡排序 a-l 对状态字符串进行排序
      * */
     public static String BubbleSort(ArrayList<String> strs) {
         String[] strList = strs.toArray(new String[0]);
         String temp = "";
         int size = strList.length;
+
         for(int i = 0 ; i < size-1; i ++)
         {
             for(int j = 0 ;j < size-1-i ; j++)
-            {
+            {//冒泡排序
                 if(strList[j].charAt(0) > strList[j+1].charAt(0))
                 {
                     temp = strList[j];
                     strList[j] = strList[j+1];
-                    strList[j+1] = temp;
+                    strList[j+1] = temp;//利用冒泡交换数值小的在前，大的灾后
                 }
             }
         }
@@ -728,7 +779,7 @@ public class Viewer extends Application {
         for (String s: strList) {
             strss += s;
         }
-
+//整个字符串strlist直接拼接再一起。可以简化为return strList
         return strss;
     }
 
@@ -812,6 +863,7 @@ public class Viewer extends Application {
 
     /*
      * Add an instance image to hbox
+     * 将实例图像添加到 hbox
      * */
     private void addPieceOrPegHbox(HBox hBox){
 
@@ -885,17 +937,18 @@ public class Viewer extends Application {
 
 
     }
-
+//展示旋转和翻折逻辑的图片
     private void rotateAndFlip(int actionType){
-
+//字母后面的0-3代表着原本的形状，数字0代表了3点钟，1代表了6点钟，2代表了9点钟，3代表了12点钟
+        //字母后面的4-7代表着反着的形状，数字4代表了3点钟，5代表了6点钟，6代表了9点钟，7代表了12点钟
         System.out.println("***************************************************************");
-        System.out.println("setOn Clockwise  "  + whichPiece + whichPieceNum);
+        System.out.println("旋转前的setOn Clockwise时针方向 "  + whichPiece + whichPieceNum);
         //imageChoose = new Image();
         String c = null;
         if(whichPiece!=null && whichPiece!="") {
             actionRotateAndFlip(actionType);
             String whichPieceName = whichPiece + whichPieceNum;
-            System.out.println("********** 旋转后：" + whichPieceName);
+            System.out.println("旋转后的时针方向：" + whichPieceName);
             imageChoose = new Image("comp1110/ass2/gui/assets/pic/" + whichPiece + "/" + whichPieceName + ".png");
             System.out.println("imageChoose  " + "comp1110/ass2/gui/assets/pic/" + whichPiece + "/" + whichPieceName + ".png");
 
@@ -911,43 +964,49 @@ public class Viewer extends Application {
     }
 
     /*
-     *   setAlertContent
-     */
+     *   setAlertContent设置警报内容
+     * */
     private void setAlertContent(String alertContent)
-    {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    {Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Information Dialog");
         alert.setHeaderText(null);
         alert.setContentText(alertContent);
         alert.showAndWait();
     }
-
     /*
-     *  get the result after Rotate or Flipan
+     *  get the result after Rotate or Flip
      *  1 clockwise rotation
      *  2 Anticlockwise rotation
-     *  3 horizontal flip
-     *  4 Vertical flip
-     * */
-    private void actionRotateAndFlip(int ActionType){
-        int resultPic = 0;
 
+     *  3 horizontal flip
+    * 4 Vertical * */
+
+    private void actionRotateAndFlip(int ActionType){
+        //字母后面的0-3代表着原本的形状，数字0代表了3点钟，1代表了6点钟，2代表了9点钟，3代表了12点钟
+        //数字0代表着右，1代表着下，2代表随着左，3代表着上
+        //字母后面的4-7代表着反着的形状，数字4代表了3点钟，5代表了6点钟，6代表了9点钟，7代表了12点钟
+        //数字4代表着右，5代表着下，6代表随着左，7代表着上
+        int resultPic = 0;
+        //private static int whichPieceNum = 0
         int num = whichPieceNum + 1;
 
         switch (ActionType){
             case 1:
-                if(1<=num && num<=3){
+                //顺时针旋转
+                if(1<=num && num<=3)
+                {
                     num++;
-                }else if(num == 4){
+                }else
+                    if(num == 4){
                     num =1;
-                }else if(5<=num && num<=7){
-                    num++;
-                }else if(num==8){
-                    num=4;
-                }
+                              }else
+                               if(5<=num && num<=7){
+                                  num++;}else if(num==8){
+                                      num=4;}
                 whichPieceNum = (--num);
                 break;
             case 2:
+                //逆时针旋转
                 if(2<=num && num<=4){
                     num--;
                 }else if(num == 1){
@@ -960,6 +1019,7 @@ public class Viewer extends Application {
                 whichPieceNum = (--num);
                 break;
             case 3:
+                //水平翻转
                 if(num==4 || num==8){
                     num = 12 - num;
                 }else if(1<=num && num<=7){
@@ -968,10 +1028,13 @@ public class Viewer extends Application {
                 whichPieceNum = (--num);
                 break;
             case 4:
+                //垂直翻转
                 if(num==1 || num==5){
                     num = 6 - num;
+                    //时钟1到5点钟属于钟面的右边，1点变5点
                 }else if((2<=num && num<=4) || (6<=num && num<=8)){
                     num = 10 - num;
+                    //时钟1到5点钟属于钟面的右边，1点变5点
                 }
                 whichPieceNum = (--num);
 
