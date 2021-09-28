@@ -31,10 +31,10 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * A very simple viewer for piece placements in the twist game.
+ * A very simple viewer for 棋子块 placements in the twist game.
  *
  * NOTE: This class is separate from your main game class.  This
- * class does not play a game, it just illustrates various piece
+ * class does not play a game, it just illustrates various 棋子块
  * placements.
  * 该课程与您的主要游戏课程分开。 这个class 不玩游戏，它只是说明各种片段
  *   展示位置。
@@ -57,10 +57,10 @@ public class Viewer extends Application {
 
     private BorderPane rootPane = new BorderPane();
     private Image imageChoose = null;// 选择的哪张图片，序号从b0-b3,others全靠的是镜像翻折
-    private int Cnum;//钉子或者piece 的定位点，以此点作为展开x坐标
-    private int Rnum;//钉子或者piece 的定位点，以此点作为展开y坐标
-    private int CnumT;//钉子或者piece ，展开x坐标，一共占据了几个x空位
-    private int RnumT;//钉子或者piece ，展开y坐标，一共占据了几个y空位
+    private int Cnum;//钉子或者棋子块 的定位点，以此点作为展开x坐标
+    private int Rnum;//钉子或者棋子块 的定位点，以此点作为展开y坐标
+    private int CnumT;//钉子或者棋子块 ，展开x坐标，一共占据了几个x空位
+    private int RnumT;//钉子或者棋子块 ，展开y坐标，一共占据了几个y空位
     public static HashMap<String,Piece> mapOffset = new HashMap<>();//hash 图
     public static String placementStringNow = "";
     public static String placementStringNowTest = "";
@@ -75,7 +75,7 @@ public class Viewer extends Application {
     private static String[] winStrings = new String[]{"a7A7","b6A7","c1A3","d2A6",
             "e2C3","f3C4","g4A7","h6D0","i6B0","j2B0","j1C0","k3C0","l4B0","l5C0"};
     //the first character identifies which of the eight shapes is being placed (a to h).
-    //第一个字符标识要放置八个形状中的哪一个（a 到 h）
+    //第一个字符标识要放置八个形状中的哪一个（a 到 h），这么放是唯一的solution which can wins the game
 
 
     public String[] pegStrings = new String[]
@@ -97,7 +97,7 @@ public class Viewer extends Application {
         ArrayList<String> listLocationInfo = new ArrayList<>();
         if(placement!=null && (placement.length()%4==0)){
 
-            //get location info of piece or peg
+            //get location info of 棋子块 or peg
             listLocationInfo = getLocationFromPlacementStr(placement);
 
             BorderPane rootPane2 = (BorderPane)FXMLLoader.load(getClass().getResource("IqTwist.fxml"));
@@ -107,10 +107,10 @@ public class Viewer extends Application {
            HBox hBoxDown = new HBox();
            VBox vbox = new VBox();
 
-            if(imageChoose == null)
-                imageChoose = new Image("comp1110/ass2/gui/assets/k.png");
-            if(whichPiece == null)
-                whichPiece = "k";
+          //  if(imageChoose == null)
+               // imageChoose = new Image("comp1110/ass2/gui/assets/k.png");
+            //if(which棋子块 == null)
+              //  which棋子块 = "k";
             //返回了绿色的k钉子
 
 
@@ -136,18 +136,19 @@ public class Viewer extends Application {
             //private Image imageChoose = null
             //public static ImageView imgViewNow = null
 
-//下面这一段不知道干吗用的，但是就算我去掉了仍然运行没有问题
-          //  imgViewNow = new ImageView(imageChoose);
-            //                    imgViewNow.setFitHeight(imageChoose.getHeight()/4 );//4个为一个
-            //                       imgViewNow.setFitWidth(imageChoose.getWidth()/4);
-            //                    picAddMonitor(imgViewNow,"*" + whichPiece);
+
+          //下面这写不能运行开始会报错 imgViewNow = new ImageView(imageChoose);
+            //                  imgViewNow.setFitHeight(imageChoose.getHeight()/4 );//4个为一个
+            //                  imgViewNow.setFitWidth(imageChoose.getWidth()/4);
+            //                picAddMonitor(imgViewNow,"*" + which棋子块);
 
                     vbox.getChildren().addAll(cb,label,imgViewNow);
 
             //draw init Placement绘制初始化放置
             //make Placement进行安置
+            //以前的定义ArrayList<String> listLocationInfo = new ArrayList<String>()
+
             GridPane pane = addGridPane(listLocationInfo);
-            //ArrayList<String> listLocationInfo = new ArrayList<String>()
 
             hBoxDown.getChildren().addAll(pane,vbox);
             vDownBox.getChildren().addAll(hboxUp,hBoxDown);
@@ -155,12 +156,16 @@ public class Viewer extends Application {
 
 
             Stage anotherStage = stageNow;
-            anotherStage.setScene(new Scene(rootPane2, 933, 700));//代表的是总stage长度宽度
-            anotherStage.setTitle("TWISTGAME VIEWER");//标题
-            rootPane2.setCenter(vDownBox);
+            anotherStage.setScene(new Scene(rootPane2, 1133, 800));//代表的是总stage长度宽度
+            anotherStage.setTitle("TWIST GAME VIEWER");//标题
+            rootPane2.setCenter(vDownBox);//放下的都是
 
             if(placement.length() == 56)
                 setAlertContent("WIN !");
+            //private static String[] winStrings = new String[]{"a7A7","b6A7","c1A3","d2A6",
+         //   "e2C3","f3C4","g4A7","h6D0","i6B0","j2B0","j1C0","k3C0","l4B0","l5C0"};
+        //the first character identifies which of the eight shapes is being placed (a to h).
+        //第一个字符标识要放置八个形状中的哪一个（a 到 h），这么放是唯一的solution which can wins the game
 
             anotherStage.show();//展示画板
 
@@ -171,13 +176,13 @@ public class Viewer extends Application {
 
     /**
      * Randomly generate a valid start string
-     * and Randomly place two pieces
+     * and Randomly place two 棋子块
      */
     public String startPlacements() {
-        //Randomly place two pieces随机放两个piece和选择难度对应的钉子
+        //Randomly place two 棋子块随机放两个棋子块和选择难度对应的钉子
         //From Anzee u6744888
-        char[] pieceOrPeg = {'a','b','c','d','e','f','g','h'};//piece和peg共享的颜色
-        char[] rowRandom = {'A','B','C','D'};//共享的行为4个字幕 coloum代笔列是8个数字
+        char[] pieceOrPeg = {'a','b','c','d','e','f','g','h'};//棋子块和peg共享的颜色
+        char[] rowRandom = {'A','B','C','D'};//共享的行为4个字幕 column代笔列是8个数字
 
         String initPlacements = "";
 
@@ -233,7 +238,7 @@ public class Viewer extends Application {
         if((initPlacements==null) && (initPlacements == "")){
             return null;
         }else {
-            return initPlacements;//生成了两个piece和难度对应的钉子
+            return initPlacements;//生成了两个棋子块和难度对应的钉子
         }
 
     }
@@ -242,7 +247,7 @@ public class Viewer extends Application {
      * Randomly generate a valid start string开始符合要求的placament string
      */
     public String startOldPlacements() {
-        //Randomly place two pieces
+        //Randomly place two 棋子块
         //From Anzee u6744888
         char[] pieceOrPeg = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};//用于随机生成字幕
         char[] rowRandom = {'A', 'B', 'C', 'D'};
@@ -284,8 +289,8 @@ public class Viewer extends Application {
                     int c4 = random.nextInt(8);//第四个x坐标以及后面【0-7）随机生成一个
                     whichPiece = whichPiece + pieceOrPeg[c1] + c2 + rowRandom[c3] + c4;
                     //空字符串/原来就有的钉子+第一个颜色字母+列坐标+行字母坐标+旋转数字
-                    // char[] pieceOrPeg = {'a','b','c','d','e','f','g','h'};//piece和peg共享的用于随机生成颜色字母
-                    //  char[] rowRandom = {'A','B','C','D'};//piece和peg共享的行4个字母 coloum代笔列是8个数字
+                    // char[] 棋子块OrPeg = {'a','b','c','d','e','f','g','h'};//棋子块和peg共享的用于随机生成颜色字母
+                    //  char[] rowRandom = {'A','B','C','D'};//棋子块和peg共享的行4个字母 column代笔列是8个数字
                     System.out.println(whichPiece);
                 }
                 initPlacements = BubbleSort(getLocationFromPlacementStr(initPlacements + whichPiece));//冒泡排序找到
@@ -303,12 +308,12 @@ public class Viewer extends Application {
 
     }
 
-//    Display images of pieces in the window (anywhere) Translate peg positions to x and y positions in the window. Display images of pieces so that their origin is in the correct place.
+//    Display images of 棋子块 in the window (anywhere) Translate peg positions to x and y positions in the window. Display images of 棋子块 so that their origin is in the correct place.
 //    在窗口中显示工件的图像（任意位置）将钉子的位置转换为窗口中的x列和y行位置。显示工件的图像，使其原点位于正确的位置。
 //    Display images so that their origin is in the correct place and their orientation is correct.
 //显示图像，使其原点位于正确位置且方向正确。
-//    Break placement strings into piece placements.   Anzee
-    //将总的放置字符串分解为piece放置字符串// FIXME Task 8 and copy it
+//    Break placement strings into 棋子块 placements.   Anzee
+    //将总的放置字符串分解为棋子块放置字符串// FIXME Task 8 and copy it
     /**
      * Create a basic text field for input and a refresh button.
      */
@@ -354,23 +359,21 @@ public class Viewer extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        stageNow = primaryStage;
 
         rootPane = (BorderPane)FXMLLoader.load(getClass().getResource("IqTwist.fxml"));
-        primaryStage.setTitle("TWIST GAME VIEWER");//左上角的小标题
-
+        stageNow = primaryStage;
+        primaryStage.setTitle("A SIMPLE GAME VIEWER");//左上角的小标题
         VBox vDownBox = new VBox();
         HBox hboxUp = new HBox();
         HBox hBoxDown = new HBox();
         VBox vbox = new VBox();
-        //选中的piece or peg
+        //选中的棋子块 or peg
         imageChoose = new Image("comp1110/ass2/gui/assets/k.png");
         //private Image imageChoose = null //BorderPane 在顶部、左侧、右侧、底部和中心位置布置子项。
         //顶部和底部的孩子将被调整到他们喜欢的高度并扩展边框窗格的宽度。 左右子节点将被调整为它们的首选宽度，
         // 并在顶部和底部节点之间扩展长度。
         // 并且中心节点将被调整大小以填充中间的可用空间。 任何位置都可以为空。
        // ImageView imageViewChoosen = new ImageView();
-
         addPieceOrPegHbox(hboxUp);
         //获得一个下拉框 选择不同的难度
         Label label = new Label();
@@ -391,7 +394,6 @@ public class Viewer extends Application {
         imgViewNow = new ImageView(imageChoose);
         vbox.getChildren().addAll(DifficultyChoiceBox,label,imgViewNow);
         /***********************************************************************************************/
-
         //绘制初始化放置程序
         GridPane rootDown = addGridPane();
         //GridPane 在行和列的灵活网格中布置其子项。 如果设置了边框和/或内边距，则其内容将布置在这些插图中。
@@ -435,7 +437,7 @@ public class Viewer extends Application {
     }
 
     /**
-     * Create board according to list ,which contain the location information of every piece or peg
+     * Create board according to list ,which contain the location information of every 棋子块 or peg
      * 根据列表创建棋盘，其中包含每个棋子或钉子的位置信息
      */
     private GridPane addGridPane(ArrayList<String> list){
@@ -463,7 +465,7 @@ public class Viewer extends Application {
             }
         }
 
-        //add piece or peg to board
+        //add 棋子块 or peg to board
         for (String str: list) {
             System.out.println("***************************************************************");
             System.out.println("********** " + str + "在GridPane中坐标以及偏移量：");
@@ -606,7 +608,7 @@ public class Viewer extends Application {
 
     /*
      * Monitor picture drag and drop
-     * 这里需要完成拖拉效果，做的不好
+     * 这里需要完成拖拉效果，做的不好需要大改动
      * */
     private void picAddMonitor(ImageView imageV,String whichPieceOrPeg){
 
@@ -614,36 +616,44 @@ public class Viewer extends Application {
 
                 if(whichPieceOrPeg.length() == 2 && !(String.valueOf(whichPieceOrPeg.charAt(1)).equals(whichPiece))){
                     whichPieceNum = 0;
-                }else if(whichPieceOrPeg.length() == 1 && whichPieceOrPeg!=whichPiece) {
+                }else
+                    if(whichPieceOrPeg.length() == 1 && whichPieceOrPeg!=whichPiece) {
                     whichPieceNum = 0;
                 }
-                System.out.println("setOnMousePressed  "  + whichPieceOrPeg);
-                //imageChoose = new Image();
+                System.out.println("setOnMousePressed  "  + whichPieceOrPeg);//鼠标点中了某一个对象
+               // imageChoose = new Image();
                 String c = null;
-                if(whichPieceOrPeg!=null && whichPieceOrPeg!="") {
-                    if(whichPieceOrPeg.length() == 2){
-                        c = String.valueOf(whichPieceOrPeg.charAt(1));
-                        whichPiece = String.valueOf(whichPieceOrPeg.charAt(1));
-                    }else {
-                        c = String.valueOf(whichPieceOrPeg.charAt(0));
-                        whichPiece = whichPieceOrPeg;
-                    }
-
-                    imageChoose = new Image("comp1110/ass2/gui/assets/pic/" + whichPiece + "/" + whichPiece + whichPieceNum + ".png");
-                    System.out.println("imageChoose  " + "comp1110/ass2/gui/assets/pic/" + whichPiece + "/" + whichPiece + whichPieceNum+ ".png");
-
-                    imgViewNow = new ImageView(imageChoose);
-                    if(whichPieceOrPeg.length() != 2){
-                        try {
-                            makePlacement(placementStringNow);
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                if (whichPieceOrPeg != "")
+                    if (whichPieceOrPeg != null) {
+                        if (whichPieceOrPeg.length() == 2)
+                        {
+                            c = String.valueOf(whichPieceOrPeg.charAt(1));
+                            whichPiece = String.valueOf(whichPieceOrPeg.charAt(1));
                         }
-                    }
-                }
+                        else {
+                            c = String.valueOf(whichPieceOrPeg.charAt(0));
+                            whichPiece = whichPieceOrPeg;
+                        }
+                        imageChoose = new Image("comp1110/ass2/gui/assets/pic/" + whichPiece + "/" + whichPiece + whichPieceNum + ".png");
+                       //选择并且打印出我需要的assets/a组/a0.png
+                        System.out.println("imageChoose  " + "comp1110/ass2/gui/assets/pic/"
+                                + whichPiece + "/" + whichPiece + whichPieceNum + ".png");
 
-                // System.out.println("event.getSceneX() " + event.getSceneX());
-                // System.out.println("event.getSceneY() " + event.getSceneY());
+                        imgViewNow = new ImageView(imageChoose);
+
+                        //  if (whichPieceOrPeg.length() != 2) {
+                        //    try {
+                        //        makePlacement(placementStringNow);
+                        //     }
+                        //     catch (IOException e) {
+                        //        e.printStackTrace();
+                        //     }
+                        // }
+
+                    }
+
+                //System.out.println("event.getSceneX() " + event.getSceneX());
+               // System.out.println("event.getSceneY() " + event.getSceneY());
             });
             //做的很不好，没有动画运动的效果，而且也没有拖动成功的感觉，需要改进
         imageV.setOnMouseDragged(event -> {      // mouse is being dragged
@@ -864,23 +874,23 @@ public class Viewer extends Application {
     /*
      * Add an instance image to hbox
      * 将实例图像添加到 hbox
+     * 横着的第一条
      * */
     private void addPieceOrPegHbox(HBox hBox){
-
         Label choosePieceOrPeg = new Label("   CHOOSE: ");
-        choosePieceOrPeg.setFont(Font.font("Timer New Roman", 20));
-
+        choosePieceOrPeg.setFont(Font.font("Timer New Roman", 30));
         Image img1 = new Image("comp1110/ass2/gui/assets/a.png");
-        ImageView imgv1 = new ImageView(img1);
-        imgv1.setFitHeight(50);
-        imgv1.setFitWidth(75);
-        picAddMonitor(imgv1,"a");
-
-        Image img2 = new Image("comp1110/ass2/gui/assets/b.png");
-        ImageView imgv2 = new ImageView(img2);
-        imgv2.setFitHeight(50);
-        imgv2.setFitWidth(75);
-        picAddMonitor(imgv2,"b");
+                ImageView imgv1 = new ImageView(img1);
+                imgv1.setFitHeight(50);
+                imgv1.setFitWidth(75);
+               picAddMonitor(imgv1,"a");//不知道这个是干吗用的
+        //红色横着的a
+               Image img2 = new Image("comp1110/ass2/gui/assets/b.png");
+                ImageView imgv2 = new ImageView(img2);
+                imgv2.setFitHeight(50);
+               imgv2.setFitWidth(75);
+             picAddMonitor(imgv2,"b");
+//红色横着的b
         Image img3 = new Image("comp1110/ass2/gui/assets/c.png");
         ImageView imgv3 = new ImageView(img3);
         imgv3.setFitHeight(25);
@@ -932,7 +942,8 @@ public class Viewer extends Application {
         imgv12.setFitWidth(50);
         picAddMonitor(imgv12,"l");
 
-        hBox.getChildren().addAll(choosePieceOrPeg,imgv1,imgv2,imgv3,imgv4,
+        hBox.getChildren().addAll(choosePieceOrPeg,//imgv1,imgv2,
+                imgv3,imgv4,
                 imgv5,imgv6,imgv7,imgv8,imgv9,imgv10,imgv11,imgv12);
 
 
@@ -987,7 +998,7 @@ public class Viewer extends Application {
         //字母后面的4-7代表着反着的形状，数字4代表了3点钟，5代表了6点钟，6代表了9点钟，7代表了12点钟
         //数字4代表着右，5代表着下，6代表随着左，7代表着上
         int resultPic = 0;
-        //private static int whichPieceNum = 0
+        //private static int which棋子块Num = 0
         int num = whichPieceNum + 1;
 
         switch (ActionType){

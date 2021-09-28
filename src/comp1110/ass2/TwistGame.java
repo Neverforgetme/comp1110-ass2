@@ -59,6 +59,7 @@ public class TwistGame {
      * @param placement A string describing a placement of one or more pieces and pegs
      * @return True if the placement is well-formed
      */
+    //现在的情况就是我们必须要先完成task4在方便调用
     public static boolean isPlacementStringWellFormed(String placement) {
         // FIXME Task 3: determine whether a placement is well-formed
         //Task 3 from Anzee
@@ -1101,7 +1102,11 @@ public class TwistGame {
 //  repeat on 1 position, the last value will cover the value before, then check the length of String, if length < 32,
 //  return false.
 //  recording all the solid points of pieces on the board, check the pegs location, if any two are same, return false.
-//  make sure all pegs are located at the area of pieces with a same color.   Anzee
+//  make sure all pegs are located at the area of pieces with a same color.
+//  使用 for 循环，如果 else 来检查每个部件的旋转是否不在板外，可以创建一个字符串集 [] 并使其与板位置匹配，然后填充位置。
+//  如果第 1 个位置有任何重复，最后一个值将覆盖之前的值，
+//  然后检查 String 的长度，如果长度 < 32，则返回 false。记录棋盘上所有棋子的实心点，检查钉子位置，如果有两个相同，
+//  则返回false。确保所有钉都位于具有相同颜色的零件区域。Anzee
 
     /**
      * Given a string describing a placement of pieces and pegs, return a set
@@ -1113,6 +1118,7 @@ public class TwistGame {
      * <p>
      * When symmetric placements of the same piece are viable, only the placement
      * with the lowest rotation should be included in the set.
+
      *
      * @param placement A valid placement string (comprised of peg and piece placements)
      * @return An set of viable piece placements, or null if there are none.
