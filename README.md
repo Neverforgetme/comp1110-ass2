@@ -1,4 +1,10 @@
 # COMP1110 Assignment 2
+Contributor：
+
+Harry Huang
+Yilun Fan
+Zec Wang
+
 
 *This assignment is only for those enrolled in COMP1110 or COMP6710. COMP1140 students should look [here](https://gitlab.cecs.anu.edu.au/comp1110/comp1140-ass2).*
 
